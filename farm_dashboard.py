@@ -144,6 +144,15 @@ if st.session_state["logged_in"]:
             key="download_users_csv"
         )
 
+            # Reset all app data
+        st.sidebar.markdown("---")
+        if st.sidebar.button("⚠️ Reset All App Data"):
+            # Clear users CSV
+            pd.DataFrame(columns=["name","email","phone","password"]).to_csv("users.csv", index=False)
+            # Clear activity log
+            pd.DataFrame(columns=["timestamp","name","email","phone","action"]).to_csv("user_activity_log.csv", index=False)
+            st.sidebar.success("All app data cleared! Users and activity logs are reset.")
+
         # Optional: display login/logout activity
         try:
             log_df = pd.read_csv("user_activity_log.csv")
