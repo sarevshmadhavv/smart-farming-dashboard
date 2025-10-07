@@ -17,7 +17,7 @@ from datetime import datetime
 
 # ---------- CONFIG ----------
 USERS_FILE = "users.csv"
-ADMIN_EMAIL = "sarveshmadhavv@gmail.com"
+ADMIN_EMAIL = "ms.sarveshmadhavv@gmail.com"
 ADMIN_PASSWORD = "sarvesh21"
 LOG_FILE = "user_activity_log.csv"
 
