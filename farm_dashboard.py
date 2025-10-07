@@ -10,6 +10,92 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from math import isfinite
+import streamlit as st
+import pandas as pd
+import os
+
+# ---------- CONFIG ----------
+USERS_FILE = "users.csv"  # stores registered users
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "admin123"
+
+# ---------- INIT FILE ----------
+if not os.path.exists(USERS_FILE):
+    df = pd.DataFrame(columns=["name", "email", "phone", "password"])
+    df.to_csv(USERS_FILE, index=False)
+
+# ---------- FUNCTIONS ----------
+def load_users():
+    return pd.read_csv(USERS_FILE)
+
+def save_user(name, email, phone, password):
+    df = load_users()
+    new_row = pd.DataFrame([[name, email, phone, password]], columns=df.columns)
+    df = pd.concat([df, new_row], ignore_index=True)
+    df.to_csv(USERS_FILE, index=False)
+
+def check_user(email, password):
+    df = load_users()
+    user = df[(df["email"] == email) & (df["password"] == password)]
+    return not user.empty
+
+# ---------- AUTH UI ----------
+if "logged_in" not in st.session_state:
+    st.session_state["logged_in"] = False
+if "is_admin" not in st.session_state:
+    st.session_state["is_admin"] = False
+
+if not st.session_state["logged_in"]:
+    st.title("🌱 AI Smart Farming Dashboard - Login / Register")
+
+    tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
+
+    with tab1:
+        email = st.text_input("Email")
+        password = st.text_input("Password", type="password")
+        if st.button("Login"):
+            if email == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+                st.session_state["logged_in"] = True
+                st.session_state["is_admin"] = True
+                st.success("Welcome Admin!")
+                st.rerun()
+            elif check_user(email, password):
+                st.session_state["logged_in"] = True
+                st.session_state["user_email"] = email
+                st.success("Login successful!")
+                st.rerun()
+            else:
+                st.error("Invalid email or password.")
+
+    with tab2:
+        name = st.text_input("Full Name")
+        email_r = st.text_input("Email")
+        phone = st.text_input("Phone Number")
+        password_r = st.text_input("Create Password", type="password")
+
+        if st.button("Register"):
+            if not name or not email_r or not password_r:
+                st.warning("Please fill all required fields.")
+            else:
+                df = load_users()
+                if email_r in df["email"].values:
+                    st.error("Email already registered.")
+                else:
+                    save_user(name, email_r, phone, password_r)
+                    st.success("Registration successful! You can now log in.")
+    st.stop()
+
+# ---------- ADMIN DASHBOARD ----------
+if st.session_state.get("is_admin", False):
+    st.sidebar.success("👑 Admin Access Granted")
+    st.sidebar.markdown("---")
+    st.sidebar.write("**Registered Users:**")
+
+    users = load_users()
+    st.sidebar.dataframe(users)
+
+    st.sidebar.markdown("📩 New users' details are automatically saved to `users.csv`.")
+
 # ------------------------------
 # 🎨 Background Image
 # ------------------------------
