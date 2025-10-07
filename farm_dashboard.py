@@ -10,21 +10,51 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from math import isfinite
-import streamlit as st 
-import pandas as pd 
+import streamlit as st
+import pandas as pd
 import os
+from datetime import datetime
 
 # ---------- CONFIG ----------
 USERS_FILE = "users.csv"
 ADMIN_EMAIL = "sarveshmadhavv@gmail.com"
-ADMIN_PASSWORD = "XXXX"
+ADMIN_PASSWORD = "sarvesh21"
+LOG_FILE = "user_activity_log.csv"
 
-# ---------- INIT FILE ----------
+# ---------- INIT FILES ----------
 if not os.path.exists(USERS_FILE):
-    df = pd.DataFrame(columns=["name", "email", "phone", "password"])
+    pd.DataFrame(columns=["name", "email", "phone", "password"]).to_csv(USERS_FILE, index=False)
+
+if not os.path.exists(LOG_FILE):
+    pd.DataFrame(columns=["timestamp","name","email","phone","action"]).to_csv(LOG_FILE, index=False)
+
+# ---------- FUNCTIONS ----------
+def load_users():
+    return pd.read_csv(USERS_FILE)
+
+def save_user(name, email, phone, password):
+    df = load_users()
+    df = pd.concat([df, pd.DataFrame([[name, email, phone, password]], columns=df.columns)], ignore_index=True)
     df.to_csv(USERS_FILE, index=False)
 
-# ---------- AUTH STATE ----------
+def check_user(email, password):
+    df = load_users()
+    return not df[(df["email"] == email) & (df["password"] == password)].empty
+
+def get_user_by_email(email):
+    df = load_users()
+    user_row = df[df["email"] == email]
+    if user_row.empty: return None
+    row = user_row.iloc[0]
+    return {"name": row["name"], "email": row["email"], "phone": row["phone"], "password": row["password"]}
+
+def log_activity(name, email, phone, action):
+    df_log = pd.read_csv(LOG_FILE)
+    new_row = pd.DataFrame([[datetime.now().strftime("%Y-%m-%d %H:%M:%S"), name, email, phone, action]], columns=df_log.columns)
+    df_log = pd.concat([df_log, new_row], ignore_index=True)
+    df_log.to_csv(LOG_FILE, index=False)
+
+# ---------- SESSION STATE ----------
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 if "is_admin" not in st.session_state:
@@ -37,29 +67,33 @@ if not st.session_state["logged_in"]:
     st.title("🌱 AI Smart Farming Dashboard - Login / Register")
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
+    # ----- LOGIN -----
     with tab1:
         email = st.text_input("Email", key="login_email")
         password = st.text_input("Password", type="password", key="login_password")
         if st.button("Login", key="login_btn"):
 
-            # ---------- Admin login ----------
-            if email == "229004092@sastra.ac.in" and password == "sarvesh21":
+            # Admin login
+            if email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
                 st.session_state["logged_in"] = True
                 st.session_state["is_admin"] = True
                 st.session_state["user_email"] = email
                 st.success("Welcome Admin!")
+                log_activity("Admin", ADMIN_EMAIL, "", "login")
                 st.rerun()
 
-            # ---------- Normal user login ----------
+            # Normal user login
             elif check_user(email, password):
                 st.session_state["logged_in"] = True
                 st.session_state["user_email"] = email
                 st.success("Login successful!")
+                user = get_user_by_email(email)
+                log_activity(user["name"], user["email"], user.get("phone",""), "login")
                 st.rerun()
             else:
                 st.error("Invalid email or password.")
 
-    # ---------------- REGISTER TAB ----------------
+    # ----- REGISTER -----
     with tab2:
         name = st.text_input("Full Name", key="reg_name")
         email_r = st.text_input("Email", key="reg_email")
@@ -80,16 +114,14 @@ if not st.session_state["logged_in"]:
     st.stop()
 
 # ---------- DASHBOARD ----------
-if st.session_state.get("logged_in"):
+if st.session_state["logged_in"]:
 
-    # ---------- Admin dashboard ----------
+    # ----- ADMIN DASHBOARD -----
     if st.session_state.get("is_admin"):
         st.sidebar.success("👑 Admin Access Granted")
         st.sidebar.write("**All Registered Users:**")
         users = load_users()
         st.sidebar.dataframe(users)
-
-        # Optional: download CSV
         st.sidebar.download_button(
             label="Download Users CSV",
             data=users.to_csv(index=False),
@@ -97,19 +129,23 @@ if st.session_state.get("logged_in"):
             mime="text/csv"
         )
 
-    # ---------- Normal user dashboard ----------
+    # ----- NORMAL USER DASHBOARD -----
     else:
         st.title("🌱 AI Smart Farming Dashboard")
         user_email = st.session_state["user_email"]
-        df = load_users()
-        user = df[df["email"] == user_email].iloc[0]
-
+        user = get_user_by_email(user_email)
         st.subheader(f"Welcome, {user['name']}")
         st.write(f"**Email:** {user['email']}")
         st.write(f"**Phone:** {user['phone'] or '—'}")
 
-    # ---------- Logout button ----------
+    # ----- LOGOUT BUTTON -----
     if st.button("Logout", key="logout_btn"):
+        if st.session_state.get("is_admin"):
+            log_activity("Admin", ADMIN_EMAIL, "", "logout")
+        else:
+            user = get_user_by_email(st.session_state["user_email"])
+            log_activity(user["name"], user["email"], user.get("phone",""), "logout")
+
         st.session_state.clear()
         st.success("Logged out successfully.")
         st.experimental_rerun()
