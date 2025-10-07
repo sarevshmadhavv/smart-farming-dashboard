@@ -120,14 +120,21 @@ if st.session_state["logged_in"]:
     if st.session_state.get("is_admin"):
         st.sidebar.success("👑 Admin Access Granted")
         st.sidebar.write("**All Registered Users:**")
+
+        # Load users data
         users = load_users()
         st.sidebar.dataframe(users)
+
+        # Ensure CSV download button works even if no users yet
+        csv_data = users.to_csv(index=False)
         st.sidebar.download_button(
-            label="Download Users CSV",
-            data=users.to_csv(index=False),
+            label="📥 Download Users CSV",
+            data=csv_data,
             file_name="users.csv",
-            mime="text/csv"
+            mime="text/csv",
+            key="download_users_csv"
         )
+
 
     # ----- NORMAL USER DASHBOARD -----
     else:
