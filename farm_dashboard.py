@@ -145,17 +145,24 @@ if st.session_state["logged_in"]:
         st.write(f"**Email:** {user['email']}")
         st.write(f"**Phone:** {user['phone'] or '—'}")
 
-    # ----- LOGOUT BUTTON -----
-    if st.button("Logout", key="logout_btn"):
+    # ---------- LOGOUT BUTTON ----------
+    logout_clicked = st.button("Logout", key="logout_btn")
+    if logout_clicked:
+        # Log logout activity
         if st.session_state.get("is_admin"):
             log_activity("Admin", ADMIN_EMAIL, "", "logout")
         else:
-            user = get_user_by_email(st.session_state["user_email"])
-            log_activity(user["name"], user["email"], user.get("phone",""), "logout")
+            user = get_user_by_email(st.session_state.get("user_email"))
+            if user:
+                log_activity(user["name"], user["email"], user.get("phone",""), "logout")
 
+        # Clear session state
         st.session_state.clear()
-        st.success("Logged out successfully.")
-        st.experimental_rerun()
+
+        # Instead of st.experimental_rerun(), just show message and stop
+        st.success("Logged out successfully. Please refresh or relaunch the app to login again.")
+        st.stop()
+
 
 
 # ------------------------------
