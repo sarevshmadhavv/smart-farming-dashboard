@@ -39,21 +39,24 @@ def check_user(email, password):
     user = df[(df["email"] == email) & (df["password"] == password)]
     return not user.empty
 
-# ---------- AUTH UI ----------
+# ---------- AUTH STATE ----------
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 if "is_admin" not in st.session_state:
     st.session_state["is_admin"] = False
 
+# ---------- AUTH UI ----------
 if not st.session_state["logged_in"]:
     st.title("🌱 AI Smart Farming Dashboard - Login / Register")
 
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
+    # ---------------- LOGIN TAB ----------------
     with tab1:
-        email = st.text_input("Email")
-        password = st.text_input("Password", type="password")
-        if st.button("Login"):
+        email = st.text_input("Email", key="login_email")
+        password = st.text_input("Password", type="password", key="login_password")
+
+        if st.button("Login", key="login_btn"):
             if email == ADMIN_USERNAME and password == ADMIN_PASSWORD:
                 st.session_state["logged_in"] = True
                 st.session_state["is_admin"] = True
@@ -67,13 +70,14 @@ if not st.session_state["logged_in"]:
             else:
                 st.error("Invalid email or password.")
 
+    # ---------------- REGISTER TAB ----------------
     with tab2:
-        name = st.text_input("Full Name")
-        email_r = st.text_input("Email")
-        phone = st.text_input("Phone Number")
-        password_r = st.text_input("Create Password", type="password")
+        name = st.text_input("Full Name", key="reg_name")
+        email_r = st.text_input("Email", key="reg_email")
+        phone = st.text_input("Phone Number", key="reg_phone")
+        password_r = st.text_input("Create Password", type="password", key="reg_password")
 
-        if st.button("Register"):
+        if st.button("Register", key="register_btn"):
             if not name or not email_r or not password_r:
                 st.warning("Please fill all required fields.")
             else:
@@ -83,6 +87,7 @@ if not st.session_state["logged_in"]:
                 else:
                     save_user(name, email_r, phone, password_r)
                     st.success("Registration successful! You can now log in.")
+
     st.stop()
 
 # ---------- ADMIN DASHBOARD ----------
@@ -95,6 +100,7 @@ if st.session_state.get("is_admin", False):
     st.sidebar.dataframe(users)
 
     st.sidebar.markdown("📩 New users' details are automatically saved to `users.csv`.")
+
 
 # ------------------------------
 # 🎨 Background Image
