@@ -43,7 +43,7 @@ if not st.session_state["logged_in"]:
         if st.button("Login", key="login_btn"):
 
             # ---------- Admin login ----------
-            if email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
+            if email == "229004092@sastra.ac.in" and password == "sarvesh21":
                 st.session_state["logged_in"] = True
                 st.session_state["is_admin"] = True
                 st.session_state["user_email"] = email
