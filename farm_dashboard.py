@@ -116,25 +116,52 @@ if not st.session_state["logged_in"]:
 # ---------- DASHBOARD ----------
 if st.session_state["logged_in"]:
 
-    # ----- ADMIN DASHBOARD -----
+        # ----- ADMIN DASHBOARD -----
     if st.session_state.get("is_admin"):
         st.sidebar.success("👑 Admin Access Granted")
+        st.sidebar.markdown("---")
         st.sidebar.write("**All Registered Users:**")
 
-        # Load users data
-        users = load_users()
-        st.sidebar.dataframe(users)
+        # Load users
+        try:
+            users = load_users()
+        except Exception as e:
+            st.error(f"Failed to load users.csv: {e}")
+            users = pd.DataFrame(columns=["name","email","phone","password"])
 
-        # Ensure CSV download button works even if no users yet
-        csv_data = users.to_csv(index=False)
+        # Display table
+        if users.empty:
+            st.sidebar.info("No users registered yet.")
+        else:
+            st.sidebar.dataframe(users)
+
+        # Download button (works even if empty)
         st.sidebar.download_button(
             label="📥 Download Users CSV",
-            data=csv_data,
+            data=users.to_csv(index=False),
             file_name="users.csv",
             mime="text/csv",
             key="download_users_csv"
         )
 
+        # Optional: display login/logout activity
+        try:
+            log_df = pd.read_csv("user_activity_log.csv")
+            st.sidebar.markdown("---")
+            st.sidebar.write("**Login/Logout Activity:**")
+            if log_df.empty:
+                st.sidebar.info("No activity yet.")
+            else:
+                st.sidebar.dataframe(log_df)
+            st.sidebar.download_button(
+                label="📥 Download Activity Log",
+                data=log_df.to_csv(index=False),
+                file_name="user_activity_log.csv",
+                mime="text/csv",
+                key="download_activity_csv"
+            )
+        except FileNotFoundError:
+            st.sidebar.info("No activity log found yet.")
 
     # ----- NORMAL USER DASHBOARD -----
     else:
