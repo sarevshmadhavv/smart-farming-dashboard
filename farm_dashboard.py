@@ -10,58 +10,47 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from math import isfinite
-import streamlit as st
-import pandas as pd
+import streamlit as st 
+import pandas as pd 
 import os
 
 # ---------- CONFIG ----------
-USERS_FILE = "users.csv"  # stores registered users
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "admin123"
+USERS_FILE = "users.csv"
+ADMIN_EMAIL = "sarveshmadhavv@gmail.com"
+ADMIN_PASSWORD = "XXXX"
 
 # ---------- INIT FILE ----------
 if not os.path.exists(USERS_FILE):
     df = pd.DataFrame(columns=["name", "email", "phone", "password"])
     df.to_csv(USERS_FILE, index=False)
 
-# ---------- FUNCTIONS ----------
-def load_users():
-    return pd.read_csv(USERS_FILE)
-
-def save_user(name, email, phone, password):
-    df = load_users()
-    new_row = pd.DataFrame([[name, email, phone, password]], columns=df.columns)
-    df = pd.concat([df, new_row], ignore_index=True)
-    df.to_csv(USERS_FILE, index=False)
-
-def check_user(email, password):
-    df = load_users()
-    user = df[(df["email"] == email) & (df["password"] == password)]
-    return not user.empty
-
 # ---------- AUTH STATE ----------
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 if "is_admin" not in st.session_state:
     st.session_state["is_admin"] = False
+if "user_email" not in st.session_state:
+    st.session_state["user_email"] = None
 
 # ---------- AUTH UI ----------
 if not st.session_state["logged_in"]:
     st.title("🌱 AI Smart Farming Dashboard - Login / Register")
-
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
-    # ---------------- LOGIN TAB ----------------
     with tab1:
         email = st.text_input("Email", key="login_email")
         password = st.text_input("Password", type="password", key="login_password")
-
         if st.button("Login", key="login_btn"):
-            if email == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+
+            # ---------- Admin login ----------
+            if email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
                 st.session_state["logged_in"] = True
                 st.session_state["is_admin"] = True
+                st.session_state["user_email"] = email
                 st.success("Welcome Admin!")
                 st.rerun()
+
+            # ---------- Normal user login ----------
             elif check_user(email, password):
                 st.session_state["logged_in"] = True
                 st.session_state["user_email"] = email
@@ -90,16 +79,40 @@ if not st.session_state["logged_in"]:
 
     st.stop()
 
-# ---------- ADMIN DASHBOARD ----------
-if st.session_state.get("is_admin", False):
-    st.sidebar.success("👑 Admin Access Granted")
-    st.sidebar.markdown("---")
-    st.sidebar.write("**Registered Users:**")
+# ---------- DASHBOARD ----------
+if st.session_state.get("logged_in"):
 
-    users = load_users()
-    st.sidebar.dataframe(users)
+    # ---------- Admin dashboard ----------
+    if st.session_state.get("is_admin"):
+        st.sidebar.success("👑 Admin Access Granted")
+        st.sidebar.write("**All Registered Users:**")
+        users = load_users()
+        st.sidebar.dataframe(users)
 
-    st.sidebar.markdown("📩 New users' details are automatically saved to `users.csv`.")
+        # Optional: download CSV
+        st.sidebar.download_button(
+            label="Download Users CSV",
+            data=users.to_csv(index=False),
+            file_name="users.csv",
+            mime="text/csv"
+        )
+
+    # ---------- Normal user dashboard ----------
+    else:
+        st.title("🌱 AI Smart Farming Dashboard")
+        user_email = st.session_state["user_email"]
+        df = load_users()
+        user = df[df["email"] == user_email].iloc[0]
+
+        st.subheader(f"Welcome, {user['name']}")
+        st.write(f"**Email:** {user['email']}")
+        st.write(f"**Phone:** {user['phone'] or '—'}")
+
+    # ---------- Logout button ----------
+    if st.button("Logout", key="logout_btn"):
+        st.session_state.clear()
+        st.success("Logged out successfully.")
+        st.experimental_rerun()
 
 
 # ------------------------------
