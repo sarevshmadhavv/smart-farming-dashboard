@@ -67,7 +67,7 @@ if not st.session_state["logged_in"]:
     st.title("🌱 AI Smart Farming Dashboard - Login / Register")
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
-    background_url = "https://pin.it/622xl3x8O"
+    background_url = "https://images.unsplash.com/photo-1744230673231-865d54a0aba4?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     st.markdown(
         f"""
         <style>
