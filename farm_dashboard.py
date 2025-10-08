@@ -63,7 +63,16 @@ if "user_email" not in st.session_state:
     st.session_state["user_email"] = None
 
 # ---------- AUTH UI ----------
-if not st.session_state["logged_in"]:
+st.markdown("""
+    <style>
+    /* Change tab text color to black */
+    button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p {
+        color: black !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+if not st.session_state.get("logged_in", False):
     st.title("🌱 AI Smart Farming Dashboard - Login / Register")
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
