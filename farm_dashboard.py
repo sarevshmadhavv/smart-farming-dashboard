@@ -93,11 +93,6 @@ if not st.session_state.get("logged_in", False):
             <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">📈 Yield Score</div>
             <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🌍 Climate Scenario</div>
         </div>
-
-        <p style="font-size: 16px; font-weight: 700; margin-top: 10px;">
-            🚀 Login now to unlock your personalized AI farming dashboard!
-        </p>
-    </div>
     """, unsafe_allow_html=True)
 
 
