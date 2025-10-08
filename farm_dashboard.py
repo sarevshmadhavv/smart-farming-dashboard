@@ -77,7 +77,7 @@ if not st.session_state.get("logged_in", False):
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
     # ---------- APP INTRO & FEATURES ----------
     st.markdown("""
-    <div style="text-align: center; color: black;">
+    <div style="text-align: center;">
         <h3 style="font-weight: 800; margin-bottom: 10px;">
             🌾 Experience the Future of Smart Farming
         </h3>
