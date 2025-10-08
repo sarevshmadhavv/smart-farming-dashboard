@@ -96,7 +96,7 @@ if not st.session_state.get("logged_in", False):
     """, unsafe_allow_html=True)
 
 
-    background_url = "https://images.unsplash.com/photo-1744230673231-865d54a0aba4?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    background_url = "https://plus.unsplash.com/premium_photo-1683133591246-588a6b680d74?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     st.markdown(
         f"""
         <style>
