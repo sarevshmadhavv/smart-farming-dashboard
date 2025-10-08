@@ -75,6 +75,31 @@ st.markdown("""
 if not st.session_state.get("logged_in", False):
     st.title("🌱 AI Smart Farming Dashboard - Login / Register")
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
+    # ---------- APP INTRO & FEATURES ----------
+    st.markdown("""
+    <div style="background-color: rgba(255,255,255,0.85); padding: 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-bottom: 25px;">
+        <h3 style="color: #2e7d32; text-align: center; font-weight: 800; margin-bottom: 10px;">
+            🌾 Experience the Future of Smart Farming
+        </h3>
+        <p style="text-align: center; font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 15px;">
+            Make every farming decision intelligent with AI-powered insights.  
+            Track your crops, predict yields, and optimize water usage — all in one intuitive dashboard.
+        </p>
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">☀️ Weather</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🌾 Crop Advisory</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">💧 Irrigation</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🐛 Pest Risk</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">📈 Yield Score</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🌍 Climate Scenario</div>
+        </div>
+
+        <p style="text-align: center; color:#2e7d32; font-weight:600; margin-top:15px;">
+            🚀 Login now to unlock your personalized AI farming dashboard!
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     background_url = "https://images.unsplash.com/photo-1744230673231-865d54a0aba4?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     st.markdown(
