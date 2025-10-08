@@ -77,27 +77,27 @@ if not st.session_state.get("logged_in", False):
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
     # ---------- APP INTRO & FEATURES ----------
     st.markdown("""
-    <h3 style="text-align:center; color:#2e7d32; font-weight:800; margin-bottom:10px;">
-    🌾 Experience the Future of Smart Farming
-    </h3>
+    <div style="text-align: center; color: black;">
+        <h3 style="font-weight: 800; margin-bottom: 10px;">
+            🌾 Experience the Future of Smart Farming
+        </h3>
+        <p style="font-size: 16px; line-height: 1.6; font-weight: 500;">
+            Make every farming decision intelligent with AI-powered insights.  
+            Track your crops, predict yields, and optimize water usage — all in one intuitive dashboard.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">☀️ Weather</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🌾 Crop Advisory</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">💧 Irrigation</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🐛 Pest Risk</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">📈 Yield Score</div>
+            <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🌍 Climate Scenario</div>
+        </div>
 
-    <p style="text-align:center; font-size:16px; color:#333; line-height:1.6; margin-bottom:15px;">
-    Make every farming decision intelligent with AI-powered insights.  
-    Track your crops, predict yields, and optimize water usage — all in one intuitive dashboard.
-    </p>
-
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-        <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">☀️ Weather</div>
-        <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🌾 Crop Advisory</div>
-        <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">💧 Irrigation</div>
-        <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🐛 Pest Risk</div>
-        <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">📈 Yield Score</div>
-        <div style="background-color:#f1f8e9; padding:10px 15px; border-radius:10px; font-weight:600; color:#1b5e20;">🌍 Climate Scenario</div>
+        <p style="font-size: 16px; font-weight: 700; margin-top: 10px;">
+            🚀 Login now to unlock your personalized AI farming dashboard!
+        </p>
     </div>
-
-    <p style="text-align: center; color:#2e7d32; font-weight:600; margin-top:15px;">
-    🚀 Login now to unlock your personalized AI farming dashboard!
-    </p>
     """, unsafe_allow_html=True)
 
 
