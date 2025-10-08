@@ -73,7 +73,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if not st.session_state.get("logged_in", False):
-    st.title("🌱 AI Smart Farming Dashboard - Login / Register")
+    st.markdown("""
+    <h1 style="color: black; font-weight: 800; text-align: center;">
+        🌱 AI Smart Farming Dashboard - Login / Register
+    </h1>
+    """, unsafe_allow_html=True)
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
     # ---------- APP INTRO & FEATURES ----------
     st.markdown("""
